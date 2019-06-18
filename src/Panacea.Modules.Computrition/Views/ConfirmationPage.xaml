@@ -1,0 +1,77 @@
+﻿<UserControl
+    x:Class="Panacea.Modules.Computrition.Views.ConfirmationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Panacea.Modules.Computrition.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
+    xmlns:pcontrols="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
+    xmlns:viewModels="clr-namespace:Panacea.Modules.Computrition.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <d:UserControl.DataContext>
+        <x:Type Type="viewModels:ConfirmationPageViewModel" />
+    </d:UserControl.DataContext>
+    <Grid
+        Name="Grid"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+        <Grid Margin="50,30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Image
+                Margin="15"
+                Source="pack://application:,,,/PanaceaLib;component/Resources/Images/profile.png"
+                Stretch="None" />
+            <TextBlock
+                Name="TitleTextBlock"
+                Grid.Row="1"
+                Margin="5"
+                pcontrols:Material.RelativeFontSizeRatio="1.2"
+                FontWeight="DemiBold"
+                Text="{multilinguality:Translate 'Please confirm the following personal information',
+                                                 'Computrition'}"
+                TextAlignment="Center" />
+            <TextBlock
+                Grid.Row="2"
+                Margin="5"
+                pcontrols:Material.RelativeFontSizeRatio="1.2"
+                Text="{Binding Text}"
+                TextAlignment="Center" />
+            <Button
+                Name="ConfirmButton"
+                Grid.Row="3"
+                Margin="25"
+                HorizontalAlignment="Center"
+                pcontrols:Material.RelativeFontSizeRatio="1.2"
+                Background="{DynamicResource ColorSuccess}"
+                Command="{Binding ConfirmationMade}"
+                Content="{multilinguality:Translate 'Confirm',
+                                                    'Computrition'}"
+                Style="{DynamicResource PrimaryButton}" />
+            <TextBlock
+                Grid.Row="4"
+                Margin="10"
+                pcontrols:Material.RelativeFontSizeRatio="1.0"
+                TextAlignment="Center">
+                <TextBlock.Inlines>
+                    <Run Name="NotConfirmedTextBlock" Text="{multilinguality:Translate 'Not you? Please ', 'Computrition'}" />
+                    <Hyperlink Command="{Binding CallStaff}">
+                        <TextBlock Text="{multilinguality:Translate 'call a staff member', 'Computrition'}" />
+                    </Hyperlink>
+                    <Run Text="{multilinguality:Translate ' to help you.', 'Computrition'}" />
+                    <Hyperlink Command="{Binding ConfirmationCancelled}">
+                        <TextBlock Text="{multilinguality:Translate 'Continue using Panacea™', 'Computrition'}" />
+                    </Hyperlink>
+                </TextBlock.Inlines>
+            </TextBlock>
+        </Grid>
+    </Grid>
+</UserControl>

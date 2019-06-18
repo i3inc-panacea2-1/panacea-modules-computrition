@@ -1,0 +1,185 @@
+﻿<UserControl
+    x:Class="Panacea.Modules.Computrition.Views.WelcomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Panacea.Modules.Computrition.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Panacea.Modules.Computrition.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
+    xmlns:pcontrols="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
+    xmlns:viewModels="clr-namespace:Panacea.Modules.Computrition.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <d:UserControl.DataContext>
+        <x:Type Type="viewModels:WelcomePageViewModel" />
+    </d:UserControl.DataContext>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:DateToStringConverter x:Key="DateToStringConverter" />
+        <converters:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter" />
+        <converters:MealEditableToVisibilityConverter x:Key="MealEditableToVisibilityConverter" />
+        <converters:MealClosedToVisibilityConverter x:Key="MealClosedToVisibilityConverter" />
+        <converters:MealOpenToVisibilityConverter x:Key="MealOpenToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Name="Grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Margin="10,20,10,10"
+            pcontrols:Material.RelativeFontSizeRatio="1.4"
+            TextAlignment="Center"
+            TextWrapping="NoWrap">
+            <TextBlock.Inlines>
+                <Run Text="{multilinguality:Translate 'Hello', 'Computrition'}" />
+                <Run Text="{Binding Name}" />
+                <Run Text="!" />
+            </TextBlock.Inlines>
+        </TextBlock>
+        <TextBlock
+            Grid.Row="1"
+            Margin="10"
+            pcontrols:Material.RelativeFontSizeRatio="1.0"
+            TextWrapping="Wrap">
+            <TextBlock.Inlines>
+                <Run Text="{multilinguality:Translate 'Here you can order your future meals based on your dietary plan and the available selections. Tap on the meal you want to order for, add menu items for each menu category and submit your orders.', 'Computrition'}" />
+            </TextBlock.Inlines>
+        </TextBlock>
+        <TextBlock
+            Grid.Row="2"
+            Margin="10"
+            pcontrols:Material.RelativeFontSizeRatio="1.0"
+            TextWrapping="Wrap"
+            Visibility="{Binding CallFoodServicesVisibility}">
+            <TextBlock.Inlines>
+                <Run Text="{multilinguality:Translate 'For any help with your order you can', 'Computrition'}" />
+                <Hyperlink Command="{Binding CallFoodServicesCommand}">
+                    <Run Text="{multilinguality:Translate 'call Food Services', 'Computrition'}" />
+                </Hyperlink>
+                <Run Text="." />
+            </TextBlock.Inlines>
+        </TextBlock>
+        <ScrollViewer
+            Grid.Row="3"
+            HorizontalScrollBarVisibility="Disabled"
+            PanningMode="VerticalOnly">
+            <ItemsControl ItemsSource="{Binding GroupedMeals}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid
+                            Margin="0,20,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Rows="1" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid MinWidth="200" Margin="5">
+
+                            <StackPanel Margin="5">
+                                <TextBlock
+                                    Margin="5"
+                                    Padding="10"
+                                    pcontrols:Material.RelativeFontSizeRatio="1.2"
+                                    Background="DodgerBlue"
+                                    Foreground="White"
+                                    Text="{Binding Key, Converter={StaticResource DateToStringConverter}}"
+                                    TextAlignment="Center" />
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="1" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Border Margin="5" Background="White">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect
+                                                            BlurRadius="10"
+                                                            Opacity=".2"
+                                                            ShadowDepth="2"
+                                                            Color="Black" />
+                                                    </Border.Effect>
+                                                </Border>
+                                                <StackPanel Margin="10">
+                                                    <TextBlock
+                                                        pcontrols:Material.RelativeFontSizeRatio="1.2"
+                                                        FontWeight="SemiBold"
+                                                        Text="{Binding Name}"
+                                                        TextAlignment="Center" />
+
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        pcontrols:Material.RelativeFontSizeRatio="0.7"
+                                                        FontStyle="Italic"
+                                                        Foreground="#bb000000"
+                                                        TextAlignment="Center">
+                                                        <TextBlock.Inlines>
+                                                            <Run Text="{multilinguality:Translate 'Ends at: ', 'Computrition'}" />
+                                                            <Run Text="{Binding EndTime}" />
+                                                        </TextBlock.Inlines>
+                                                    </TextBlock>
+                                                    <StackPanel Visibility="{Binding ., Converter={StaticResource MealOpenToVisibilityConverter}}">
+                                                        <TextBlock
+                                                            pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                                            Text="{multilinguality:Translate 'Order open',
+                                                                                             'Computrition'}"
+                                                            TextAlignment="Center" />
+                                                        <Button
+                                                            Command="{Binding ElementName=Grid, Path=DataContext.EditCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Content="{multilinguality:Translate 'Order now',
+                                                                                                'Computrition'}"
+                                                            Style="{DynamicResource PrimaryButton}" />
+                                                    </StackPanel>
+
+                                                    <StackPanel Visibility="{Binding ., Converter={StaticResource MealEditableToVisibilityConverter}}">
+                                                        <TextBlock
+                                                            pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                                            Text="{multilinguality:Translate 'Order sent',
+                                                                                             'Computrition'}"
+                                                            TextAlignment="Center" />
+                                                        <Button
+                                                            Command="{Binding ElementName=Grid, Path=DataContext.EditCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Content="{multilinguality:Translate 'Modify your tray',
+                                                                                                'Computrition'}"
+                                                            Style="{DynamicResource PrimaryButton}" />
+                                                    </StackPanel>
+
+                                                    <StackPanel Visibility="{Binding ., Converter={StaticResource MealClosedToVisibilityConverter}}">
+                                                        <TextBlock
+                                                            pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                                            Text="{multilinguality:Translate 'Order closed',
+                                                                                             'Computrition'}"
+                                                            TextAlignment="Center" />
+                                                        <Button
+                                                            Command="{Binding ElementName=Grid, Path=DataContext.ViewTrayCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Content="{multilinguality:Translate 'View your tray',
+                                                                                                'Computrition'}"
+                                                            Style="{DynamicResource PrimaryButton}" />
+                                                    </StackPanel>
+
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
