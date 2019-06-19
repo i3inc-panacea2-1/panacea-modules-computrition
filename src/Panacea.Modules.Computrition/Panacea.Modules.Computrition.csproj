@@ -180,7 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Computrition">
-      <Version>0.0.2-beta20190611-1309-gdc7321c</Version>
+      <Version>0.0.3-beta20190619-1317-gf6139b0</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Controls">
       <Version>0.2.2</Version>
