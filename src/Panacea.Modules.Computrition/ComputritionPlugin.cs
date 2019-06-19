@@ -65,7 +65,7 @@ namespace Panacea.Modules.Computrition
         public void Call()
         {
             if (_core.TryGetUiManager(out IUiManager _ui)){
-                _ui.Navigate(new LoadingSettingsViewModel(this, _core));
+                _ui.Navigate(new LoadingSettingsViewModel(this, _core), false);
             }
             else
             {
@@ -107,6 +107,10 @@ namespace Panacea.Modules.Computrition
 #else
                 return;
 #endif
+            }
+            if (mealToRemind == null || meal == null)
+            {
+                return;
             }
             ReminderViewModel reminder;
             try

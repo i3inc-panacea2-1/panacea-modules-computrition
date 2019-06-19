@@ -31,6 +31,42 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -50,20 +86,30 @@
   <ItemGroup>
     <Compile Include="ComputritionPlugin.cs" />
     <Compile Include="Converters\BooleanInvertedToVisibilityConverter.cs" />
+    <Compile Include="Converters\MakeSelectionsButtonVisibilityConverter.cs" />
     <Compile Include="Converters\DateToStringConverter.cs" />
+    <Compile Include="Converters\EditSelectionsButtonVisibilityConverter.cs" />
     <Compile Include="Converters\MealClosedToVisibilityConverter.cs" />
     <Compile Include="Converters\MealEditableToVisibilityConverter.cs" />
     <Compile Include="Converters\MealOpenToVisibilityConverter.cs" />
     <Compile Include="Models\MealDetails.cs" />
+    <Compile Include="Models\RecipeModel.cs" />
     <Compile Include="ViewModels\ConfirmationPageViewModel.cs" />
+    <Compile Include="ViewModels\EditMenuViewModel.cs" />
     <Compile Include="ViewModels\LoadingSettingsViewModel.cs" />
     <Compile Include="ViewModels\MenuPageViewModel.cs" />
+    <Compile Include="ViewModels\NutrientsListPopupViewModel.cs" />
     <Compile Include="ViewModels\OrderSentNotificationViewModel.cs" />
+    <Compile Include="ViewModels\QuantitySelectorPopupViewModel.cs" />
+    <Compile Include="ViewModels\RecipeInfoPopupViewModel.cs" />
     <Compile Include="ViewModels\ReminderViewModel.cs" />
     <Compile Include="ViewModels\ViewTrayPageViewModel.cs" />
     <Compile Include="ViewModels\WelcomePageViewModel.cs" />
     <Compile Include="Views\ConfirmationPage.xaml.cs">
       <DependentUpon>ConfirmationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditMenu.xaml.cs">
+      <DependentUpon>EditMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoadingSettings.xaml.cs">
       <DependentUpon>LoadingSettings.xaml</DependentUpon>
@@ -71,11 +117,26 @@
     <Compile Include="Views\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NutrientsList.xaml.cs">
+      <DependentUpon>NutrientsList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NutrientsListPopup.xaml.cs">
+      <DependentUpon>NutrientsListPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OrderSentNotification.xaml.cs">
       <DependentUpon>OrderSentNotification.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\QuantitySelectorPopup.xaml.cs">
+      <DependentUpon>QuantitySelectorPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RecipeInfoPopup.xaml.cs">
+      <DependentUpon>RecipeInfoPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Reminder.xaml.cs">
       <DependentUpon>Reminder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tray.xaml.cs">
+      <DependentUpon>Tray.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewTrayPage.xaml.cs">
       <DependentUpon>ViewTrayPage.xaml</DependentUpon>
@@ -143,11 +204,13 @@
       <Version>0.0.1</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="Views\ConfirmationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EditMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -159,11 +222,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\NutrientsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NutrientsListPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\OrderSentNotification.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\QuantitySelectorPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecipeInfoPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Reminder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Tray.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

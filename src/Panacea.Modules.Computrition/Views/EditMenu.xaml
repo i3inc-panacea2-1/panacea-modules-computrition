@@ -1,0 +1,174 @@
+﻿<UserControl
+    x:Class="Panacea.Modules.Computrition.Views.EditMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Panacea.Modules.Computrition.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Panacea.Modules.Computrition.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
+    xmlns:pcontrols="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
+    xmlns:viewModels="clr-namespace:Panacea.Modules.Computrition.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="White"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Name="Root">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Margin="10"
+                pcontrols:Material.RelativeFontSizeRatio="1.4"
+                FontWeight="SemiBold"
+                Text="{Binding Title}" />
+            <StackPanel Grid.Row="1">
+                <TextBlock
+                    Margin="10"
+                    pcontrols:Material.RelativeFontSizeRatio="0.8"
+                    TextWrapping="Wrap">
+                    <TextBlock.Inlines>
+                        <Run Text="{multilinguality:Translate 'Press SELECT to Add or Remove selections and view dish details by pressing INFO.', 'Computrition'}" />
+
+                    </TextBlock.Inlines>
+                </TextBlock>
+
+            </StackPanel>
+
+            <ItemsControl
+                Grid.Row="2"
+                ItemsSource="{Binding GroupedRecipes}"
+                ScrollViewer.CanContentScroll="True"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.ScrollUnit="Pixel">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ItemsControl ItemsSource="{Binding}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="2" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock
+                                            Grid.ColumnSpan="2"
+                                            Margin="5,0,5,10"
+                                            pcontrols:Material.RelativeFontSizeRatio="1.2"
+                                            FontWeight="SemiBold"
+                                            Text="{Binding Name}"
+                                            TextAlignment="Center" />
+                                        <StackPanel
+                                            Grid.Row="1"
+                                            HorizontalAlignment="Center"
+                                            Orientation="Horizontal">
+                                            <Button
+                                                Margin="3"
+                                                Background="#f1f1f1"
+                                                Command="{Binding ElementName=Root, Path=DataContext.InfoCommand}"
+                                                CommandParameter="{Binding}"
+                                                Content="{multilinguality:Translate 'Info',
+                                                                                    'Computrition'}"
+                                                Foreground="Black"
+                                                Style="{DynamicResource PrimaryButton}" />
+                                            <Button
+                                                Grid.Column="1"
+                                                Margin="3"
+                                                Command="{Binding ElementName=Root, Path=DataContext.AddToTrayCommand}"
+                                                CommandParameter="{Binding}"
+                                                Content="{multilinguality:Translate 'Add to tray',
+                                                                                    'Computrition'}"
+                                                Style="{DynamicResource PrimaryButton}" />
+                                        </StackPanel>
+                                        <Border
+                                            Grid.Row="2"
+                                            Grid.ColumnSpan="2"
+                                            Margin="2,10,2,0"
+                                            BorderBrush="#aaa"
+                                            BorderThickness="0,0,0,1" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <Border
+                            Padding="{TemplateBinding Control.Padding}"
+                            Background="{TemplateBinding Panel.Background}"
+                            BorderBrush="{TemplateBinding Border.BorderBrush}"
+                            BorderThickness="{TemplateBinding Border.BorderThickness}"
+                            SnapsToDevicePixels="True">
+                            <ScrollViewer
+                                Padding="{TemplateBinding Control.Padding}"
+                                Focusable="False"
+                                HorizontalScrollBarVisibility="Disabled"
+                                PanningMode="VerticalOnly">
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+            </ItemsControl>
+
+        </Grid>
+        <Grid Grid.Column="1" Background="#f5f5f5">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <local:Tray
+                Grid.Column="1"
+                AddOneCommand="{Binding AddOneCommand}"
+                MaxSelections="{Binding MaxSelections}"
+                RemoveCommand="{Binding RemoveCommand}"
+                RemoveOneCommand="{Binding RemoveOneCommand}"
+                SelectedRecipes="{Binding SelectedRecipes}"
+                SelectionCount="{Binding SelectionCount}" />
+            <Button
+                Grid.Row="1"
+                Padding="20"
+                pcontrols:Material.RelativeFontSizeRatio="1.0"
+                Command="{Binding NextCommand}"
+                Style="{DynamicResource PrimaryButton}"
+                Visibility="{Binding HasNext, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock>
+                    <TextBlock.Inlines>
+                        <Run Text="{multilinguality:Translate 'Continue to ', 'Computrition'}" />
+                        <Run Text="{Binding NextCategory}" />
+                    </TextBlock.Inlines>
+                </TextBlock>
+            </Button>
+            <Button
+                Grid.Row="1"
+                Padding="20"
+                pcontrols:Material.RelativeFontSizeRatio="1.0"
+                Background="{DynamicResource ColorInformation}"
+                Command="{Binding CompleteOrderCommand}"
+                Content="{multilinguality:Translate 'Submit order',
+                                                    'Computrition'}"
+                Style="{DynamicResource PrimaryButton}"
+                Visibility="{Binding HasNext, Converter={StaticResource BooleanInvertedToVisibilityConverter}}" />
+        </Grid>
+    </Grid>
+</UserControl>
