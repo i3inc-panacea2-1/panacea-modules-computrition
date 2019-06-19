@@ -83,7 +83,7 @@ namespace Panacea.Modules.Computrition
         public void SetupReminderTimer()
         {
             reminderTimer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher);
-            reminderTimer.Interval = TimeSpan.FromSeconds(1);//.FromMinutes(5);
+            reminderTimer.Interval = TimeSpan.FromMinutes(5);
             reminderTimer.Tick += CheckForReminder;
             reminderTimer.Start();
         }
