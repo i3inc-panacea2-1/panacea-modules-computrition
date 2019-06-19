@@ -37,7 +37,7 @@ namespace Panacea.Modules.Computrition
         public ComputritionPlugin(PanaceaServices core)
         {
             _core = core;
-            computritionmrn = "H001501022";
+            //computritionmrn = "H001501022";
         }
         public Task BeginInit()
         {
@@ -71,7 +71,6 @@ namespace Panacea.Modules.Computrition
             {
                 _core.Logger.Error(this, "ui manager not loaded");
             }
-            //TODO: MAIN ENTRY TURN TO MVVM_window.ThemeManager.Navigate(new LoadingSettingsControl(), false);
         }
         public void SetupRefreshTimer(int interval)
         {
