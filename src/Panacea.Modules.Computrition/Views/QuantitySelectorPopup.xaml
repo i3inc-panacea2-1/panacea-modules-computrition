@@ -10,14 +10,13 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
+    <Grid TextElement.FontSize="{DynamicResource FontSize-Normal}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock
             Margin="10"
-            pcontrols:Material.RelativeFontSizeRatio="1.0"
             Text="{multilinguality:Translate 'How many items would you like to add in your tray?',
                                              'Computrition'}"
             TextAlignment="Center" />

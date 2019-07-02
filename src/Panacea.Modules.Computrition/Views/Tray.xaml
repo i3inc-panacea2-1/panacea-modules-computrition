@@ -48,7 +48,8 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid Background="#f5f5f5" DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:Tray}}">
+    <Grid Background="#f5f5f5" DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:Tray}}"
+          TextElement.FontSize="{DynamicResource FontSize-Normal}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -58,13 +59,12 @@
         </Grid.RowDefinitions>
         <TextBlock
             Margin="5"
-            controls:Material.RelativeFontSizeRatio="1.2"
+            FontSize="{DynamicResource FontSize-Large}"
             Text="{multilinguality:Translate 'Your tray',
                                              'Computrition'}" />
         <Grid Grid.Row="1">
             <TextBlock
                 Margin="10"
-                controls:Material.RelativeFontSizeRatio="1.0"
                 FontStyle="Italic"
                 Foreground="#333"
                 Text="{multilinguality:Translate 'is empty...',
@@ -100,7 +100,6 @@
                                 Grid.Column="1"
                                 Margin="0,0,10,0"
                                 VerticalAlignment="Center"
-                                controls:Material.RelativeFontSizeRatio="1.0"
                                 Text="{Binding NumOfServings}" />
                             <Button
                                 Grid.Column="2"
@@ -116,7 +115,7 @@
                                 Grid.Column="3"
                                 Margin="0,0,10,0"
                                 VerticalAlignment="Center"
-                                controls:Material.RelativeFontSizeRatio="0.8"
+                                FontSize="{DynamicResource FontSize-Small}"
                                 FontWeight="SemiBold"
                                 Text="{Binding Name}"
                                 TextWrapping="Wrap" />
@@ -137,7 +136,6 @@
         <TextBlock
             Grid.Row="3"
             Margin="10,5"
-            controls:Material.RelativeFontSizeRatio="1.0"
             TextWrapping="Wrap"
             Visibility="{Binding SelectionsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TextBlock.Inlines>
@@ -151,7 +149,6 @@
         <TextBlock
             Grid.Row="3"
             Margin="10,5"
-            controls:Material.RelativeFontSizeRatio="1.0"
             Text="{multilinguality:Translate 'You have selected the maximum number of items',
                                              'computrition'}"
             Visibility="{Binding Completed, Converter={StaticResource BooleanToVisibilityConverter}}" />

@@ -24,7 +24,7 @@
         <converters:MealClosedToVisibilityConverter x:Key="MealClosedToVisibilityConverter" />
         <converters:MealOpenToVisibilityConverter x:Key="MealOpenToVisibilityConverter" />
     </UserControl.Resources>
-    <Grid Name="Grid">
+    <Grid Name="Grid" TextElement.FontSize="{DynamicResource FontSize-Normal}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -34,7 +34,7 @@
 
         <TextBlock
             Margin="10,20,10,10"
-            pcontrols:Material.RelativeFontSizeRatio="1.4"
+            FontSize="{DynamicResource FontSize-X-Large}"
             TextAlignment="Center"
             TextWrapping="NoWrap">
             <TextBlock.Inlines>
@@ -46,7 +46,6 @@
         <TextBlock
             Grid.Row="1"
             Margin="10"
-            pcontrols:Material.RelativeFontSizeRatio="1.0"
             TextWrapping="Wrap">
             <TextBlock.Inlines>
                 <Run Text="{multilinguality:Translate 'Here you can order your future meals based on your dietary plan and the available selections. Tap on the meal you want to order for, add menu items for each menu category and submit your orders.', 'Computrition'}" />
@@ -55,7 +54,6 @@
         <TextBlock
             Grid.Row="2"
             Margin="10"
-            pcontrols:Material.RelativeFontSizeRatio="1.0"
             TextWrapping="Wrap"
             Visibility="{Binding CallFoodServicesVisibility}">
             <TextBlock.Inlines>
@@ -88,7 +86,7 @@
                                 <TextBlock
                                     Margin="5"
                                     Padding="10"
-                                    pcontrols:Material.RelativeFontSizeRatio="1.2"
+                                    FontSize="{DynamicResource FontSize-Large}"
                                     Background="DodgerBlue"
                                     Foreground="White"
                                     Text="{Binding Key, Converter={StaticResource DateToStringConverter}}"
@@ -113,14 +111,14 @@
                                                 </Border>
                                                 <StackPanel Margin="10">
                                                     <TextBlock
-                                                        pcontrols:Material.RelativeFontSizeRatio="1.2"
+                                                        FontSize="{DynamicResource FontSize-Large}"
                                                         FontWeight="SemiBold"
                                                         Text="{Binding Name}"
                                                         TextAlignment="Center" />
 
                                                     <TextBlock
                                                         Grid.Column="1"
-                                                        pcontrols:Material.RelativeFontSizeRatio="0.7"
+                                                        FontSize="{DynamicResource FontSize-Xx-Small}"
                                                         FontStyle="Italic"
                                                         Foreground="#bb000000"
                                                         TextAlignment="Center">
@@ -131,7 +129,7 @@
                                                     </TextBlock>
                                                     <StackPanel Visibility="{Binding ., Converter={StaticResource MealOpenToVisibilityConverter}}">
                                                         <TextBlock
-                                                            pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                                            FontSize="{DynamicResource FontSize-Small}"
                                                             Text="{multilinguality:Translate 'Order open',
                                                                                              'Computrition'}"
                                                             TextAlignment="Center" />
@@ -145,7 +143,7 @@
 
                                                     <StackPanel Visibility="{Binding ., Converter={StaticResource MealEditableToVisibilityConverter}}">
                                                         <TextBlock
-                                                            pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                                            FontSize="{DynamicResource FontSize-Small}"
                                                             Text="{multilinguality:Translate 'Order sent',
                                                                                              'Computrition'}"
                                                             TextAlignment="Center" />
@@ -159,7 +157,7 @@
 
                                                     <StackPanel Visibility="{Binding ., Converter={StaticResource MealClosedToVisibilityConverter}}">
                                                         <TextBlock
-                                                            pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                                            FontSize="{DynamicResource FontSize-Small}"
                                                             Text="{multilinguality:Translate 'Order closed',
                                                                                              'Computrition'}"
                                                             TextAlignment="Center" />

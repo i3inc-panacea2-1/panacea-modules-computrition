@@ -22,7 +22,7 @@
     <d:UserControl.DataContext>
         <x:Type Type="viewModels:MenuPageViewModel" />
     </d:UserControl.DataContext>
-    <Grid Name="Root">
+    <Grid Name="Root" TextElement.FontSize="{DynamicResource FontSize-Large}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
@@ -36,7 +36,6 @@
                 <TextBlock
                     Grid.Row="1"
                     Margin="10,5"
-                    pcontrols:Material.RelativeFontSizeRatio="1.0"
                     TextWrapping="Wrap">
                     <TextBlock.Inlines>
                         <Run Text="{multilinguality:Translate 'Tap on a Menu Category to make your selections.', 'Computrition'}" />
@@ -45,7 +44,6 @@
                 <TextBlock
                     Grid.Row="1"
                     Margin="10,5"
-                    pcontrols:Material.RelativeFontSizeRatio="1.0"
                     TextWrapping="Wrap"
                     Visibility="{Binding CallFoodServicesVisibility}">
                     <TextBlock.Inlines>
@@ -59,7 +57,6 @@
                 <TextBlock
                     Grid.Row="1"
                     Margin="10,5"
-                    pcontrols:Material.RelativeFontSizeRatio="1.0"
                     TextWrapping="Wrap"
                     Visibility="{Binding NoMealRequiredVisibility}">
                     <TextBlock.Inlines>
@@ -92,7 +89,7 @@
                             <StackPanel Margin="10">
                                 <TextBlock
                                     Padding="10"
-                                    pcontrols:Material.RelativeFontSizeRatio="1.2"
+                                    FontSize="{DynamicResource FontSize-Large}"
                                     FontWeight="SemiBold"
                                     Text="{Binding Name}"
                                     TextAlignment="Center" />
@@ -139,13 +136,12 @@
             </Grid.RowDefinitions>
             <TextBlock
                 Margin="5"
-                pcontrols:Material.RelativeFontSizeRatio="1.2"
+                FontSize="{DynamicResource FontSize-Large}"
                 Text="{multilinguality:Translate 'Your tray',
                                                  'Computrition'}" />
             <Grid Grid.Row="1">
                 <TextBlock
                     Margin="10"
-                    pcontrols:Material.RelativeFontSizeRatio="1.0"
                     FontStyle="Italic"
                     Foreground="#333"
                     Text="{multilinguality:Translate 'is empty...',
@@ -163,19 +159,18 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock
                                         VerticalAlignment="Center"
-                                        pcontrols:Material.RelativeFontSizeRatio="0.8"
+                                        FontSize="{DynamicResource FontSize-X-Small}"
                                         Text="{Binding NumOfServings}"
                                         TextWrapping="Wrap" />
                                     <TextBlock
                                         Grid.Column="1"
                                         VerticalAlignment="Center"
-                                        pcontrols:Material.RelativeFontSizeRatio="0.8"
+                                        FontSize="{DynamicResource FontSize-X-Small}"
                                         Text="x "
                                         TextWrapping="Wrap" />
                                     <TextBlock
                                         Grid.Column="2"
                                         VerticalAlignment="Center"
-                                        pcontrols:Material.RelativeFontSizeRatio="1.0"
                                         Text="{Binding Name}"
                                         TextWrapping="Wrap" />
 
@@ -189,7 +184,6 @@
                 Grid.Row="2"
                 Margin="3"
                 Padding="10"
-                pcontrols:Material.RelativeFontSizeRatio="1.0"
                 Background="{DynamicResource ColorSuccess}"
                 Command="{Binding ShowNutrientsCommand}"
                 Content="{multilinguality:Translate 'Nutrients',
@@ -200,7 +194,6 @@
                 Grid.Row="3"
                 Margin="3"
                 Padding="20"
-                pcontrols:Material.RelativeFontSizeRatio="1.0"
                 Background="{DynamicResource ColorInformation}"
                 Command="{Binding CompleteOrderCommand}"
                 Content="{multilinguality:Translate 'Submit Order',

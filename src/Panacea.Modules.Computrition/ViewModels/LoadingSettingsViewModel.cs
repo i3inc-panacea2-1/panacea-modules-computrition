@@ -53,15 +53,11 @@ namespace Panacea.Modules.Computrition.ViewModels
                 _core.Logger.Error(this, ex.Message);
                 return;
             }
-            try {
-                if (Debugger.IsAttached)
-                {
-                    computrition = new DemoService();
-                }
-                else
-                {
-                    computrition = new ComputritionService(new HttpConnector(15000), _settings.ServerAddress);
-                }
+            try
+            {
+
+                computrition = new ComputritionService(new HttpConnector(15000), _settings.ServerAddress);
+
             }
             catch (Exception ex)
             {
@@ -76,11 +72,13 @@ namespace Panacea.Modules.Computrition.ViewModels
             try
             {
                 Status = _translator.Translate("Getting patient information...");
-                _mrn = await _plugin.GetMRN();
+                if (_mrn == null)
+                    _mrn = await _plugin.GetMRN();
             }
             catch (Exception ex)
             {
-                if (_core.TryGetUiManager(out IUiManager _ui)){
+                if (_core.TryGetUiManager(out IUiManager _ui))
+                {
                     _ui.Toast(_translator.Translate("Unable to get patient information. Please, try again later."));
                     _ui.GoBack();
                 }
@@ -91,9 +89,9 @@ namespace Panacea.Modules.Computrition.ViewModels
             {
                 Status = _translator.Translate("Getting available meals...");
                 var patron = await computrition.GetPatronInfoAsync(
-                                                    _mrn, 
-                                                    _settings.PatronInfoParams.ValidMeals, 
-                                                    _settings.PatronInfoParams.NumberOfMeals, 
+                                                    _mrn,
+                                                    _settings.PatronInfoParams.ValidMeals,
+                                                    _settings.PatronInfoParams.NumberOfMeals,
                                                     _settings.PatronInfoParams.NumberOfDays,
                                                     _settings.PatronInfoParams.SkipCurrentMeal);
                 patron.Meals = patron.Meals.OrderBy(m => m.StartTime).ToList();
@@ -101,7 +99,8 @@ namespace Panacea.Modules.Computrition.ViewModels
                 if (_core.TryGetUiManager(out IUiManager _ui))
                 {
                     _ui.Navigate(confirmation, false);
-                } else
+                }
+                else
                 {
                     _core.Logger.Error(this, "ui manager not loaded");
                 }
@@ -122,6 +121,12 @@ namespace Panacea.Modules.Computrition.ViewModels
         {
             _core = core;
             _plugin = plugin;
+        }
+
+        public LoadingSettingsViewModel(ComputritionPlugin plugin, PanaceaServices core, string mrn)
+            : this(plugin, core)
+        {
+            _mrn = mrn;
         }
     }
 }

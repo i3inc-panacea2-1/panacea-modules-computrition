@@ -34,6 +34,9 @@ namespace Panacea.Modules.Computrition
         int refreshInterval = 1;//default if no server answer
         private readonly PanaceaServices _core;
 
+        [PanaceaInject("ComputritionMrn", "Use a custom MRN", "ComputritionMrn=ABC123")]
+        protected string ComputritionMrn { get; set; }
+
         public ComputritionPlugin(PanaceaServices core)
         {
             _core = core;
@@ -45,7 +48,8 @@ namespace Panacea.Modules.Computrition
         }
         public Task EndInit()
         {
-            RefreshSettings().ContinueWith(tsk=> {
+            RefreshSettings().ContinueWith(tsk =>
+            {
                 SetupRefreshTimer(refreshInterval);
                 SetupReminderTimer();
             });
@@ -64,8 +68,9 @@ namespace Panacea.Modules.Computrition
 
         public void Call()
         {
-            if (_core.TryGetUiManager(out IUiManager _ui)){
-                _ui.Navigate(new LoadingSettingsViewModel(this, _core), false);
+            if (_core.TryGetUiManager(out IUiManager _ui))
+            {
+                _ui.Navigate(new LoadingSettingsViewModel(this, _core, ComputritionMrn), false);
             }
             else
             {
@@ -127,7 +132,8 @@ namespace Panacea.Modules.Computrition
                 if (mealToRemind.MessageType == "notification")
                 {
                     _ui.Notify(reminder);
-                } else
+                }
+                else
                 {
                     _ui.ShowPopup<object>(reminder);
                 }
@@ -152,15 +158,11 @@ namespace Panacea.Modules.Computrition
             {
                 _settings = await GetSettings();
                 refreshInterval = _settings.CheckInterval != 0 ? _settings.CheckInterval : 10;
-                _mrn = await GetMRN();
-                if (Debugger.IsAttached)
-                {
-                    computrition = new ComputritionService(new MockConnector(), "");
-                }
-                else
-                {
-                    computrition = new ComputritionService(new HttpConnector(15000), _settings.ServerAddress);
-                }
+                if (ComputritionMrn == null) _mrn = await GetMRN();
+                else _mrn = ComputritionMrn;
+
+                computrition = new ComputritionService(new HttpConnector(15000), _settings.ServerAddress);
+
                 _patron = await GetPatronInfo();
             }
             catch (Exception ex)
@@ -215,10 +217,10 @@ namespace Panacea.Modules.Computrition
         public async Task<Menu> GetMenu(Meal meal)
         {
             return await computrition.GetPatronMenuAsync(
-                                        _mrn, 
-                                        meal.Id, 
-                                        meal.Date, 
-                                        _settings.PatronMenuParams.Nutrients, 
+                                        _mrn,
+                                        meal.Id,
+                                        meal.Date,
+                                        _settings.PatronMenuParams.Nutrients,
                                         _settings.PatronMenuParams.RoundingMethod);
         }
         MealDetails GetNextMealReminder(ComputritionSettings settings, PatronInfo patron)

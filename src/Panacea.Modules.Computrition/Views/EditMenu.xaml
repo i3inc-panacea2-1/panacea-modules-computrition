@@ -17,7 +17,8 @@
         <converters:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    <Grid Name="Root">
+    <Grid Name="Root" 
+          TextElement.FontSize="{DynamicResource FontSize-Normal}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
@@ -30,13 +31,13 @@
             </Grid.RowDefinitions>
             <TextBlock
                 Margin="10"
-                pcontrols:Material.RelativeFontSizeRatio="1.4"
+                FontSize="{DynamicResource FontSize-Xx-Large}"
                 FontWeight="SemiBold"
                 Text="{Binding Title}" />
             <StackPanel Grid.Row="1">
                 <TextBlock
                     Margin="10"
-                    pcontrols:Material.RelativeFontSizeRatio="0.8"
+                    FontSize="{DynamicResource FontSize-Small}"
                     TextWrapping="Wrap">
                     <TextBlock.Inlines>
                         <Run Text="{multilinguality:Translate 'Press SELECT to Add or Remove selections and view dish details by pressing INFO.', 'Computrition'}" />
@@ -71,7 +72,7 @@
                                         <TextBlock
                                             Grid.ColumnSpan="2"
                                             Margin="5,0,5,10"
-                                            pcontrols:Material.RelativeFontSizeRatio="1.2"
+                                            FontSize="{DynamicResource FontSize-Large}"
                                             FontWeight="SemiBold"
                                             Text="{Binding Name}"
                                             TextAlignment="Center" />
@@ -148,7 +149,6 @@
             <Button
                 Grid.Row="1"
                 Padding="20"
-                pcontrols:Material.RelativeFontSizeRatio="1.0"
                 Command="{Binding NextCommand}"
                 Style="{DynamicResource PrimaryButton}"
                 Visibility="{Binding HasNext, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -162,7 +162,6 @@
             <Button
                 Grid.Row="1"
                 Padding="20"
-                pcontrols:Material.RelativeFontSizeRatio="1.0"
                 Background="{DynamicResource ColorInformation}"
                 Command="{Binding CompleteOrderCommand}"
                 Content="{multilinguality:Translate 'Submit order',

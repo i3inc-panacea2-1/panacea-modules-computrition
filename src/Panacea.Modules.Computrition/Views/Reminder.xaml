@@ -14,7 +14,7 @@
         <x:Type Type="viewModels:ReminderViewModel" />
     </d:UserControl.DataContext>
 
-    <Grid pcontrols:Material.RelativeFontSizeRatio="1.0">
+    <Grid TextElement.FontSize="{DynamicResource FontSize-Normal}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition />
@@ -23,7 +23,7 @@
             Grid.Row="0"
             Margin="10"
             HorizontalAlignment="Center"
-            pcontrols:Material.RelativeFontSizeRatio="1.2"
+            FontSize="{DynamicResource FontSize-Large}"
             Foreground="White"
             Text="{Binding Path=Meal.Text}"
             Visibility="{Binding Path=TextVisibility}" />
@@ -38,23 +38,23 @@
             Visibility="{Binding Path=ImageVisibility}" />
         <UniformGrid Grid.Row="1" Columns="2">
             <Button
-                pcontrols:Material.RelativeFontSizeRatio="1.1"
+                FontSize="{DynamicResource FontSize-Large}"
                 Command="{Binding OrderCommand}"
                 Content="{Binding Path=Settings.OrderButtonText}"
                 Style="{DynamicResource PrimaryButton}" />
             <Button
-                pcontrols:Material.RelativeFontSizeRatio="1.1"
+                FontSize="{DynamicResource FontSize-Large}"
                 Command="{Binding CloseCommand}"
                 Content="{Binding Path=Settings.CloseButtonText}"
                 Style="{DynamicResource PrimaryButton}" />
             <Button
-                pcontrols:Material.RelativeFontSizeRatio="1.1"
+                FontSize="{DynamicResource FontSize-Large}"
                 Command="{Binding CallFoodServicesCommand}"
                 Content="{Binding Path=Settings.CallFoodServicesButtonText}"
                 Style="{DynamicResource PrimaryButton}"
                 Visibility="{Binding Path=CallFoodServicesButtonVisibility}" />
             <Button
-                pcontrols:Material.RelativeFontSizeRatio="1.1"
+                FontSize="{DynamicResource FontSize-Large}"
                 Command="{Binding NoMealCommand}"
                 Content="{Binding Path=Settings.NoMealButtonText}"
                 Style="{DynamicResource PrimaryButton}"

@@ -35,7 +35,7 @@
                 Name="TitleTextBlock"
                 Grid.Row="1"
                 Margin="5"
-                pcontrols:Material.RelativeFontSizeRatio="1.2"
+                FontSize="{DynamicResource FontSize-Large}"
                 FontWeight="DemiBold"
                 Text="{multilinguality:Translate 'Please confirm the following personal information',
                                                  'Computrition'}"
@@ -43,7 +43,7 @@
             <TextBlock
                 Grid.Row="2"
                 Margin="5"
-                pcontrols:Material.RelativeFontSizeRatio="1.2"
+                FontSize="{DynamicResource FontSize-Large}"
                 Text="{Binding Text}"
                 TextAlignment="Center" />
             <Button
@@ -51,7 +51,7 @@
                 Grid.Row="3"
                 Margin="25"
                 HorizontalAlignment="Center"
-                pcontrols:Material.RelativeFontSizeRatio="1.2"
+                FontSize="{DynamicResource FontSize-Large}"
                 Background="{DynamicResource ColorSuccess}"
                 Command="{Binding ConfirmationMade}"
                 Content="{multilinguality:Translate 'Confirm',
@@ -60,7 +60,6 @@
             <TextBlock
                 Grid.Row="4"
                 Margin="10"
-                pcontrols:Material.RelativeFontSizeRatio="1.0"
                 TextAlignment="Center">
                 <TextBlock.Inlines>
                     <Run Name="NotConfirmedTextBlock" Text="{multilinguality:Translate 'Not you? Please ', 'Computrition'}" />

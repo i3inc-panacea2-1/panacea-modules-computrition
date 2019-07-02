@@ -17,7 +17,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooltoVis" />
     </UserControl.Resources>
-    <Grid>
+    <Grid TextElement.FontSize="{DynamicResource FontSize-Normal}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -25,13 +25,12 @@
         </Grid.RowDefinitions>
         <TextBlock
             Margin="10"
-            pcontrols:Material.RelativeFontSizeRatio="1.2"
+            FontSize="{DynamicResource FontSize-Large}"
             FontWeight="SemiBold"
             Text="{Binding Recipe.Name}" />
         <TextBlock
             Grid.Row="1"
             Margin="10"
-            pcontrols:Material.RelativeFontSizeRatio="1.0"
             FontStyle="Italic"
             Text="{Binding Recipe.Description}" />
         <local:NutrientsList
