@@ -192,10 +192,10 @@
       <Version>0.0.5</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Modularity.Telephone">
-      <Version>0.2.0</Version>
+      <Version>0.2.1</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Modularity.UiManager">
-      <Version>12.0.0</Version>
+      <Version>12.0.1</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Multilinguality">
       <Version>1.0.1</Version>
