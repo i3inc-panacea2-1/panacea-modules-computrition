@@ -48,8 +48,10 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid Background="#f5f5f5" DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:Tray}}"
-          TextElement.FontSize="{DynamicResource FontSize-Normal}">
+    <Grid
+        Background="#f5f5f5"
+        DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:Tray}}"
+        TextElement.FontSize="{DynamicResource FontSize-Normal}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -150,7 +152,7 @@
             Grid.Row="3"
             Margin="10,5"
             Text="{multilinguality:Translate 'You have selected the maximum number of items',
-                                             'computrition'}"
+                                             'Computrition'}"
             Visibility="{Binding Completed, Converter={StaticResource BooleanToVisibilityConverter}}" />
     </Grid>
 </UserControl>
