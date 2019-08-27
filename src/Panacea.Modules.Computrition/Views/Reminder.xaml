@@ -26,7 +26,8 @@
             FontSize="{DynamicResource FontSize-Large}"
             Foreground="White"
             Text="{Binding Path=Meal.Text}"
-            Visibility="{Binding Path=TextVisibility}" />
+            Visibility="{Binding Path=TextVisibility}"
+            TextWrapping="Wrap"/>
         <pcontrols:CacheImage
             Grid.Row="0"
             Grid.RowSpan="1"
@@ -39,15 +40,18 @@
         <UniformGrid Grid.Row="1" Columns="2">
             <Button
                 FontSize="{DynamicResource FontSize-Large}"
+                Background="{DynamicResource ColorInformation}"
                 Command="{Binding OrderCommand}"
                 Content="{Binding Path=Settings.OrderButtonText}"
                 Style="{DynamicResource PrimaryButton}" />
             <Button
+                Background="{DynamicResource ColorSuccess}"
                 FontSize="{DynamicResource FontSize-Large}"
                 Command="{Binding CloseCommand}"
                 Content="{Binding Path=Settings.CloseButtonText}"
                 Style="{DynamicResource PrimaryButton}" />
             <Button
+                 Background="{DynamicResource ColorError}"
                 FontSize="{DynamicResource FontSize-Large}"
                 Command="{Binding CallFoodServicesCommand}"
                 Content="{Binding Path=Settings.CallFoodServicesButtonText}"
@@ -55,6 +59,7 @@
                 Visibility="{Binding Path=CallFoodServicesButtonVisibility}" />
             <Button
                 FontSize="{DynamicResource FontSize-Large}"
+                Background="#a1a1a1"
                 Command="{Binding NoMealCommand}"
                 Content="{Binding Path=Settings.NoMealButtonText}"
                 Style="{DynamicResource PrimaryButton}"

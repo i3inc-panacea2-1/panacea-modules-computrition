@@ -21,10 +21,7 @@ namespace Panacea.Modules.Computrition.ViewModels
     {
         private ComputritionPlugin _plugin;
         private PanaceaServices _core;
-        private IComputritionService _computrition;
-        private string _mrn;
-        private PatronMenu _menu;
-        private Meal _meal;
+
         public ComputritionMeal Meal { get; set; }
         public ComputritionSettings Settings { get; set; }
         public Visibility TextVisibility { get; set; }
@@ -59,17 +56,12 @@ namespace Panacea.Modules.Computrition.ViewModels
         public ICommand CallFoodServicesCommand { get; set; }
         public bool CallButton { get; set; }
         public bool NoMealButton { get; set; }
-        public ReminderViewModel(ComputritionPlugin plugin, PanaceaServices core, IComputritionService computrition, ComputritionSettings settings, string mrn, PatronMenu menu, ComputritionMeal compMeal, Meal meal)
+        public ReminderViewModel(PanaceaServices core, MenuViewModel menu, ComputritionMeal compMeal)
         {
-            this._plugin = plugin;
+
             this._core = core;
-            this._computrition = computrition;
-            this.Settings = settings;
-            this._mrn = mrn;
-            this._menu = menu;
-            this.Meal = compMeal;
-            this._meal = meal;
-            if (menu != null && compMeal.NoMealButton && _menu.Categories.Exists(r => r.Name.ToLower() == "meal not required"))
+
+            if (menu != null && menu.SelectedMeal.AllowsNoMeal)
             {
                 NoMealVisibility = Visibility.Visible;
             }
@@ -98,36 +90,14 @@ namespace Panacea.Modules.Computrition.ViewModels
                 ImageVisibility = Visibility.Visible;
                 TextVisibility = Visibility.Collapsed;
             }
-            NoMealCommand = new RelayCommand(async (args) => {
+            NoMealCommand = new RelayCommand(async (args) =>
+            {
                 try
                 {
-                    var category = _menu.Categories.First(c => c.Name.ToLower() == "meal not required");
-                    var order = new Order()
-                    {
-                        MealDate = meal.Date,
-                        MealEndTime = meal.EndTime,
-                        MealId = meal.Id,
-                        MealName = meal.Name,
-                        MealStartTime = meal.StartTime,
-                        MenuId = meal.MenuId,
-                        Mrn = mrn,
-                        Recipes = new List<Recipe>() { category.Recipes.First() },
-                        UniqueHash = _menu.UniqueHash
-                    };
-                    await computrition.SelectPatronMenuAsync(order);
-                    var popup = new OrderSentNotificationViewModel("Your order has been successfully sent!");
-                    //popup.MessageBox.Text = new Translator("Computrition").Translate("Your order has been successfully sent!");
-                    if (_core.TryGetUiManager(out IUiManager _ui))
-                    {
-                        _ui.ShowPopup<object>(popup);                        
-                    }
-                    else
-                    {
-                        _core.Logger.Error(this, "ui manager not loaded");
-                    }
+                    await menu.NoMealAsync();
                     Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     if (_core.TryGetUiManager(out IUiManager _ui))
                     {
@@ -139,14 +109,17 @@ namespace Panacea.Modules.Computrition.ViewModels
                     }
                 }
             });
-            CloseCommand = new RelayCommand(args =>{
+            CloseCommand = new RelayCommand(args =>
+            {
                 Close();
             });
-            OrderCommand = new RelayCommand(args => {
+            OrderCommand = new RelayCommand(args =>
+            {
                 _plugin.Call();
                 Close();
             });
-            CallFoodServicesCommand = new RelayCommand(args => {
+            CallFoodServicesCommand = new RelayCommand(args =>
+            {
                 if (_core.TryGetTelephone(out ITelephonePlugin _tel))
                 {
                     _tel.Call(Settings.FoodServicesPhone);

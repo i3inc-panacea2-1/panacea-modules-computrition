@@ -27,10 +27,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <Image
-                Margin="15"
-                Source="pack://application:,,,/PanaceaLib;component/Resources/Images/profile.png"
-                Stretch="None" />
+            
             <TextBlock
                 Name="TitleTextBlock"
                 Grid.Row="1"

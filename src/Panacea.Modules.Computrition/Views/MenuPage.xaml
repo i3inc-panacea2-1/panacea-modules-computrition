@@ -68,7 +68,7 @@
                     </TextBlock.Inlines>
                 </TextBlock>
             </StackPanel>
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding Categories}">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding Menu.SelectedMeal.Categories}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid VerticalAlignment="Top" Columns="3" />
@@ -102,7 +102,7 @@
                                     Style="{DynamicResource PrimaryButton}">
                                     <Button.Visibility>
                                         <MultiBinding Converter="{StaticResource MakeSelectionsButtonVisibilityConverter}">
-                                            <Binding ElementName="Root" Path="DataContext.SelectedRecipes" />
+                                            <Binding ElementName="Root" Path="DataContext.Menu.SelectedMeal.SelectedRecipes" />
                                             <Binding Path="." />
                                         </MultiBinding>
                                     </Button.Visibility>
@@ -115,7 +115,7 @@
                                     Style="{DynamicResource SecondaryButton}">
                                     <Button.Visibility>
                                         <MultiBinding Converter="{StaticResource EditSelectionsButtonVisibilityConverter}">
-                                            <Binding ElementName="Root" Path="DataContext.SelectedRecipes" />
+                                            <Binding ElementName="Root" Path="DataContext.Menu.SelectedMeal.SelectedRecipes" />
                                             <Binding Path="." />
                                         </MultiBinding>
                                     </Button.Visibility>
@@ -132,7 +132,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TextBlock
                 Margin="5"
@@ -148,7 +147,7 @@
                                                      'Computrition'}"
                     Visibility="{Binding ElementName=Tray, Path=(ItemsControl.HasItems), Converter={StaticResource BooleanInvertedToVisibilityConverter}}" />
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
-                    <ItemsControl Name="Tray" ItemsSource="{Binding SelectedRecipes}">
+                    <ItemsControl Name="Tray" ItemsSource="{Binding Menu.SelectedMeal.SelectedRecipes}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="10">
@@ -180,18 +179,25 @@
                     </ItemsControl>
                 </ScrollViewer>
             </Grid>
-            <Button
-                Grid.Row="2"
-                Margin="3"
-                Padding="10"
-                Background="{DynamicResource ColorSuccess}"
-                Command="{Binding ShowNutrientsCommand}"
-                Content="{multilinguality:Translate 'Nutrients',
-                                                    'Computrition'}"
-                Style="{DynamicResource PrimaryButton}"
-                Visibility="{Binding HasChanges, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <Button
-                Grid.Row="3"
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="0"
+                    Margin="3"
+                    Padding="10"
+                    Background="#e1e1e1"
+                    Foreground="#222"
+                    Command="{Binding ShowNutrientsCommand}"
+                    Content="{multilinguality:Translate 'Nutrients',
+                                                        'Computrition'}"
+                    Style="{DynamicResource PrimaryButton}"
+                    Visibility="{Binding HasChanges, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    FontSize="{DynamicResource FontSize-Normal}"/>
+                <Button
+                Grid.Column="1"
                 Margin="3"
                 Padding="20"
                 Background="{DynamicResource ColorInformation}"
@@ -200,6 +206,8 @@
                                                     'Computrition'}"
                 Style="{DynamicResource PrimaryButton}"
                 Visibility="{Binding HasChanges, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </Grid>
+           
         </Grid>
     </Grid>
 </UserControl>

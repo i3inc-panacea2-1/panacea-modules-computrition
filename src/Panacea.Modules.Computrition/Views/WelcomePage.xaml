@@ -68,7 +68,7 @@
             Grid.Row="3"
             HorizontalScrollBarVisibility="Disabled"
             PanningMode="VerticalOnly">
-            <ItemsControl ItemsSource="{Binding GroupedMeals}">
+            <ItemsControl ItemsSource="{Binding Menu.GroupedMeals}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid
@@ -152,7 +152,7 @@
                                                             CommandParameter="{Binding}"
                                                             Content="{multilinguality:Translate 'Modify your tray',
                                                                                                 'Computrition'}"
-                                                            Style="{DynamicResource PrimaryButton}" />
+                                                            Style="{DynamicResource SecondaryButton}" />
                                                     </StackPanel>
 
                                                     <StackPanel Visibility="{Binding ., Converter={StaticResource MealClosedToVisibilityConverter}}">
@@ -166,7 +166,7 @@
                                                             CommandParameter="{Binding}"
                                                             Content="{multilinguality:Translate 'View your tray',
                                                                                                 'Computrition'}"
-                                                            Style="{DynamicResource PrimaryButton}" />
+                                                            Style="{DynamicResource OutlinedButton}" />
                                                     </StackPanel>
 
                                                 </StackPanel>

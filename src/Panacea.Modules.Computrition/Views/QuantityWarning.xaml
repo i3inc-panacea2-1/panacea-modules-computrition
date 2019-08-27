@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="Panacea.Modules.Computrition.Views.QuantityWarning"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Panacea.Modules.Computrition.Views"
+             xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Margin="10"
+            FontSize="{DynamicResource FontSize-Normal}"
+            Text="{multilinguality:Translate 'You have not reached the maximum selections in this category. Are you sure you want to continue to the next category?',
+                                             'Computrition'}"
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                Margin="1"
+                Command="{Binding CancelCommand}"
+                Content="{multilinguality:Translate 'Review your choices',
+                                                    'Computrition'}" />
+            <Button
+                Margin="1"
+                Style="{DynamicResource PrimaryButton}"
+                Command="{Binding ContinueCommand}"
+                Content="{multilinguality:Translate 'Continue',
+                                                    'Computrition'}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

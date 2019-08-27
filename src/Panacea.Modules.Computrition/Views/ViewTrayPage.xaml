@@ -32,15 +32,16 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock
-                    FontSize="{DynamicResource FontSize-X-Large}"
-                    Text="{Binding Title}"
-                    TextAlignment="Center" />
+                    FontSize="{DynamicResource FontSize-Xx-Large}"
+                    Text="{Binding Meal.Name}"
+                    TextAlignment="Center" 
+                    Margin="10 20 10 10"/>
                 <ItemsControl
                     Name="Tray"
                     Grid.Row="1"
-                    Margin="30,0"
+                    Margin="20,0"
                     HorizontalAlignment="Center"
-                    ItemsSource="{Binding SelectedRecipes}">
+                    ItemsSource="{Binding Meal.SelectedRecipes}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid

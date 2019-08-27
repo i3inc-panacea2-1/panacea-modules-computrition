@@ -15,25 +15,10 @@ namespace Panacea.Modules.Computrition.ViewModels
     public class ConfirmationPageViewModel : ViewModelBase
     {
         private PanaceaServices _core;
-        private IComputritionService computrition;
-        private ComputritionSettings _settings;
-        private string _mrn;
-        private PatronInfo patron;
         public ICommand ConfirmationMade { get; set; }
-        public ICommand CallStaff { get; set;}
+        public ICommand CallStaff { get; set; }
         public ICommand ConfirmationCancelled { get; set; }
         private readonly Translator _translator = new Translator("Computrition");
-
-        PatronInfo _patronInfo;
-        public PatronInfo PatronInfo
-        {
-            get => _patronInfo;
-            set
-            {
-                _patronInfo = value;
-                OnPropertyChanged();
-            }
-        }
 
         bool _status;
         public bool Status
@@ -45,7 +30,6 @@ namespace Panacea.Modules.Computrition.ViewModels
                 OnPropertyChanged();
             }
         }
-
 
         string _text;
         public string Text
@@ -62,38 +46,38 @@ namespace Panacea.Modules.Computrition.ViewModels
             }
         }
 
-        public ConfirmationPageViewModel(PanaceaServices core, IComputritionService computrition, ComputritionSettings settings, string mrn, bool status, PatronInfo patron)
+        public ConfirmationPageViewModel(
+            PanaceaServices core,
+            MenuViewModel menu,
+            bool status)
         {
             _core = core;
-            _settings = settings;
-            this.computrition = computrition;
+
             this.Status = status;
-            this.PatronInfo= patron;
-            this.Text = patron.FirstName + " " + patron.LastName;
+            this.Text = menu.PatronInfo.FirstName + " " + menu.PatronInfo.LastName;
 
             ConfirmationMade = new RelayCommand((args) =>
             {
-                WelcomePageViewModel welcomePage = new WelcomePageViewModel(_core, settings, computrition, mrn, Text, PatronInfo);
+                WelcomePageViewModel welcomePage = new WelcomePageViewModel(_core, menu);
                 if (_core.TryGetUiManager(out IUiManager _ui))
                 {
                     _ui.Navigate(welcomePage);
                 }
             });
 
-            ConfirmationCancelled = new RelayCommand((args) => {
+            ConfirmationCancelled = new RelayCommand((args) =>
+            {
                 if (_core.TryGetUiManager(out IUiManager _ui))
                 {
                     _ui.GoHome();
                 }
             });
-            CallStaff = new RelayCommand((args) => {
+
+            CallStaff = new RelayCommand((args) =>
+            {
                 if (_core.TryGetTelephone(out ITelephonePlugin _tel))
                 {
-                    _tel.Call(_settings.FoodServicesPhone);
-                }
-                if (_core.TryGetUiManager(out IUiManager _ui))
-                {
-                    _ui.GoHome();
+                    menu.CallFoodServices();
                 }
             });
         }

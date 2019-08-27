@@ -5,10 +5,12 @@ using Panacea.Modularity.Telephone;
 using Panacea.Modularity.UiManager;
 using Panacea.Modules.Computrition.Models;
 using Panacea.Modules.Computrition.Views;
+using Panacea.Multilinguality;
 using Panacea.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -18,84 +20,115 @@ namespace Panacea.Modules.Computrition.ViewModels
     internal class WelcomePageViewModel : ViewModelBase
     {
         private PanaceaServices _core;
-        private ComputritionSettings settings;
-        private IComputritionService computrition;
-        private string mrn;
-        PatronInfo _patronInfo;
-        public PatronInfo PatronInfo
-        {
-            get => _patronInfo;
-            set
-            {
-                _patronInfo = value;
 
-                OnPropertyChanged();
-                OnPropertyChanged("GroupedMeals");
-                //new Meal().
-            }
-        }
-        public override async void Activate()
+        MenuViewModel _menu;
+        public MenuViewModel Menu
         {
-            await _core.GetUiManager().DoWhileBusy(async () =>
+            get => _menu; set
             {
-                PatronInfo = await computrition.GetPatronInfoAsync(
-                                                mrn,
-                                                settings.PatronInfoParams.ValidMeals,
-                                                settings.PatronInfoParams.NumberOfMeals,
-                                                settings.PatronInfoParams.NumberOfDays,
-                                                settings.PatronInfoParams.SkipCurrentMeal);
-            });
-            base.Activate();
+                _menu = value;
+                OnPropertyChanged();
+            }
         }
 
         public string Name { get; set; }
-        public IEnumerable<IGrouping<DateTime, Meal>> GroupedMeals { get => PatronInfo?.Meals.GroupBy(m => m.StartTime.Date).ToList(); }
         public ICommand ViewTrayCommand { get; set; }
         public ICommand EditCommand { get; set; }
         public ICommand CallFoodServicesCommand { get; set; }
         public Visibility CallFoodServicesVisibility { get; set; }
-        public WelcomePageViewModel(PanaceaServices core, ComputritionSettings settings, IComputritionService computrition, string mrn, string name, PatronInfo patronInfo)
+
+        public WelcomePageViewModel(
+            PanaceaServices core,
+            MenuViewModel menu)
         {
             _core = core;
-            this.settings = settings;
-            this.computrition = computrition;
-            this.mrn = mrn;
-            this.Name= name;
-            this.PatronInfo = patronInfo;
+            Menu = menu;
+            Name = Menu.PatronInfo.FirstName + " " + Menu.PatronInfo.LastName;
 
-            if (!string.IsNullOrEmpty(settings.FoodServicesPhone) && _core.TryGetTelephone(out ITelephonePlugin _t))
+            CallFoodServicesVisibility = Menu.CanCallfoodServices ? Visibility.Visible : Visibility.Collapsed;
+
+            EditCommand = new RelayCommand(async (args) =>
             {
-                CallFoodServicesVisibility = Visibility.Visible;
-            }
-            else
-            {
-                CallFoodServicesVisibility = Visibility.Collapsed;
-            }
-            EditCommand = new RelayCommand((args) =>
-            {
-                MenuPageViewModel menuPage = new MenuPageViewModel(_core, settings, computrition, mrn, args as Meal);
-                if (_core.TryGetUiManager(out IUiManager _ui))
-                {
-                    _ui.Navigate(menuPage, true);
-                }
-            });
-            ViewTrayCommand = new RelayCommand((args) =>
-            {
+                if (!core.TryGetUiManager(out IUiManager ui)) return;
                 var meal = args as Meal;
-                ViewTrayPageViewModel viewTrayPage = new ViewTrayPageViewModel(_core, computrition, meal, mrn, settings);
-                if (_core.TryGetUiManager(out IUiManager _ui))
+                await ui.DoWhileBusy(async () =>
                 {
-                    _ui.Navigate(viewTrayPage, true);
+                    try
+                    {
+                        await Menu.SetSelectedMealAndMonitorAsync(meal);
+                        var menuPage = new MenuPageViewModel(_core, Menu);
+                        if (_core.TryGetUiManager(out IUiManager _ui))
+                        {
+                            _ui.Navigate(menuPage, true);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _core.Logger.Error(this, ex.Message);
+                        ui.Toast(new Translator("Computrition").Translate("An error occured. Please, try again later"));
+                        ui.GoBack();
+                        return;
+                    }
+                });
+
+            });
+            ViewTrayCommand = new RelayCommand(async (args) =>
+            {
+                try
+                {
+                    var meal = args as Meal;
+                    if (_core.TryGetUiManager(out IUiManager ui))
+                    {
+                        await ui.DoWhileBusy(async () =>
+                        {
+                            await menu.SetSelectedMealAsync(meal);
+                            var viewTrayPage = new ViewTrayPageViewModel(menu.SelectedMeal);
+                            if (_core.TryGetUiManager(out IUiManager _ui))
+                            {
+                                _ui.Navigate(viewTrayPage, true);
+                            }
+                        });
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _core.Logger.Error(this, ex.Message);
+                    if (_core.TryGetUiManager(out IUiManager ui))
+                    {
+                        ui.Toast(new Translator("Computrition").Translate("An error occured"));
+                    }
                 }
 
             });
             CallFoodServicesCommand = new RelayCommand((args) =>
             {
-                if (_core.TryGetTelephone(out ITelephonePlugin _tel))
-                {
-                    _tel.Call(settings.FoodServicesPhone);
-                }                
+                Menu.CallFoodServices();
             });
+        }
+
+        public override async void Activate()
+        {
+            try
+            {
+                if (_core.TryGetUiManager(out IUiManager u))
+                {
+                    await u.DoWhileBusy(async () =>
+                    {
+                        await Menu.GetMealsAsync();
+                    });
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _core.Logger.Error(this, ex.Message);
+                if (_core.TryGetUiManager(out IUiManager ui))
+                {
+                    ui.GoBack();
+                }
+            }
+
         }
     }
 }

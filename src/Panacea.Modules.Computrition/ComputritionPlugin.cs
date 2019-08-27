@@ -18,11 +18,14 @@ using Panacea.Modularity.UiManager;
 using Panacea.Mvvm;
 using Panacea.Modules.Computrition.ViewModels;
 using System.Windows;
+using Panacea.Multilinguality;
 
 namespace Panacea.Modules.Computrition
 {
     public class ComputritionPlugin : ICallablePlugin
     {
+       
+        
         //To be set by cmd arguments
         protected string computritionmrn;
         DispatcherTimer refreshTimer;
@@ -37,15 +40,25 @@ namespace Panacea.Modules.Computrition
         [PanaceaInject("ComputritionMrn", "Use a custom MRN", "ComputritionMrn=ABC123")]
         protected string ComputritionMrn { get; set; }
 
+        [PanaceaInject("MealNotRequiredCategoryName", "The name of the category that represents the NO MEAL choice", "MealNotRequiredCategoryName=\"meal not required\"")]
+        protected string MealNotRequiredCategoryName { get; set; } = "meal not required";
+
+        public int RemainingTime { get; set; }
+
+        public const int MaxIdleTime = 30 * 60;
+
         public ComputritionPlugin(PanaceaServices core)
         {
             _core = core;
+            
             //computritionmrn = "H001501022";
         }
+
         public Task BeginInit()
         {
             return Task.CompletedTask;
         }
+
         public Task EndInit()
         {
             RefreshSettings().ContinueWith(tsk =>
@@ -64,19 +77,18 @@ namespace Panacea.Modules.Computrition
             return;
         }
 
-        //TODO: NOT NEEDED I GUESS? public IMainScreenButton MainButton { get; set; }
-
         public void Call()
         {
             if (_core.TryGetUiManager(out IUiManager _ui))
             {
-                _ui.Navigate(new LoadingSettingsViewModel(this, _core, ComputritionMrn), false);
+                _ui.Navigate(new LoadingSettingsViewModel(this, _core, ComputritionMrn, MealNotRequiredCategoryName), false);
             }
             else
             {
                 _core.Logger.Error(this, "ui manager not loaded");
             }
         }
+
         public void SetupRefreshTimer(int interval)
         {
             refreshTimer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher);
@@ -84,6 +96,7 @@ namespace Panacea.Modules.Computrition
             refreshTimer.Tick += RefreshSettings;
             refreshTimer.Start();
         }
+
         public void SetupReminderTimer()
         {
             reminderTimer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher);
@@ -91,6 +104,7 @@ namespace Panacea.Modules.Computrition
             reminderTimer.Tick += CheckForReminder;
             reminderTimer.Start();
         }
+
         private async void CheckForReminder(object sender, EventArgs e)
         {
             if (_settings == null || _patron == null)
@@ -119,23 +133,27 @@ namespace Panacea.Modules.Computrition
             ReminderViewModel reminder;
             try
             {
-                var menu = await GetMenu(meal);
-                reminder = new ReminderViewModel(this, _core, computrition, _settings, _mrn, menu, mealToRemind, meal);
+                
+                var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
+                await vm.SetSelectedMealAsync(meal);
+                reminder = new ReminderViewModel( _core, vm,  mealToRemind);
             }
             catch (Exception ex)
             {
-                reminder = new ReminderViewModel(this, _core, computrition, _settings, _mrn, null, mealToRemind, meal);
-                _core.Logger.Error(this, "Could not get menu information!");
+                var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
+                await vm.SetSelectedMealAsync(meal);
+                reminder = new ReminderViewModel(_core, vm, mealToRemind);
+                _core.Logger.Error(this, "Could not get menu information! " + ex.Message);
             }
-            if (_core.TryGetUiManager(out IUiManager _ui))
+            if (_core.TryGetUiManager(out IUiManager ui))
             {
                 if (mealToRemind.MessageType == "notification")
                 {
-                    _ui.Notify(reminder);
+                    ui.Notify(reminder);
                 }
                 else
                 {
-                    _ui.ShowPopup<object>(reminder);
+                    await ui.ShowPopup<object>(reminder);
                 }
             }
             else
@@ -143,6 +161,7 @@ namespace Panacea.Modules.Computrition
                 _core.Logger.Error(this, "ui manager not loaded");
             }
         }
+
         private async void RefreshSettings(object sender, EventArgs e)
         {
             if ((sender as DispatcherTimer).Interval.TotalMinutes != refreshInterval)
@@ -162,7 +181,7 @@ namespace Panacea.Modules.Computrition
                 else _mrn = ComputritionMrn;
 
                 computrition = new ComputritionService(new HttpConnector(15000), _settings.ServerAddress);
-
+               
                 _patron = await GetPatronInfo();
             }
             catch (Exception ex)
@@ -171,6 +190,7 @@ namespace Panacea.Modules.Computrition
                 refreshInterval = 1;
             }
         }
+
         public async Task<ComputritionSettings> GetSettings()
         {
             var serverResponse =
@@ -181,6 +201,7 @@ namespace Panacea.Modules.Computrition
             }
             return serverResponse.Result;
         }
+
         public async Task<string> GetMRN()
         {
             var response = await _core.HttpClient.GetObjectAsync<Mrn>("computrition/get_mrn/", allowCache: false);
@@ -205,6 +226,9 @@ namespace Panacea.Modules.Computrition
                 }
             }
         }
+
+        
+
         public async Task<PatronInfo> GetPatronInfo()
         {
             return await computrition.GetPatronInfoAsync(
@@ -223,6 +247,7 @@ namespace Panacea.Modules.Computrition
                                         _settings.PatronMenuParams.Nutrients,
                                         _settings.PatronMenuParams.RoundingMethod);
         }
+
         MealDetails GetNextMealReminder(ComputritionSettings settings, PatronInfo patron)
         {
             var now = DateTime.Now;

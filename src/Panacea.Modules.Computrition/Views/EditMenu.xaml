@@ -27,14 +27,21 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <TextBlock
                 Margin="10"
                 FontSize="{DynamicResource FontSize-Xx-Large}"
                 FontWeight="SemiBold"
-                Text="{Binding Title}" />
-            <StackPanel Grid.Row="1">
+                Text="{Binding Menu.SelectedMeal.Name}" />
+            <TextBlock
+                Margin="10"
+                Grid.Row="1"
+                FontSize="{DynamicResource FontSize-Xx-Large}"
+                FontWeight="SemiBold"
+                Text="{Binding Menu.SelectedMeal.SelectedCategory.Name}" />
+            <StackPanel Grid.Row="2">
                 <TextBlock
                     Margin="10"
                     FontSize="{DynamicResource FontSize-Small}"
@@ -48,8 +55,8 @@
             </StackPanel>
 
             <ItemsControl
-                Grid.Row="2"
-                ItemsSource="{Binding GroupedRecipes}"
+                Grid.Row="3"
+                ItemsSource="{Binding Menu.SelectedMeal.SelectedCategory.GroupedRecipes}"
                 ScrollViewer.CanContentScroll="True"
                 VirtualizingStackPanel.IsVirtualizing="True"
                 VirtualizingStackPanel.ScrollUnit="Pixel">
@@ -137,37 +144,51 @@
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <local:Tray
                 Grid.Column="1"
-                AddOneCommand="{Binding AddOneCommand}"
-                MaxSelections="{Binding MaxSelections}"
-                RemoveCommand="{Binding RemoveCommand}"
-                RemoveOneCommand="{Binding RemoveOneCommand}"
-                SelectedRecipes="{Binding SelectedRecipes}"
-                SelectionCount="{Binding SelectionCount}" />
+                Categories="{Binding Menu.SelectedMeal.Categories}"
+                SelectedCategory="{Binding Menu.SelectedMeal.SelectedCategory, Mode=TwoWay}"/>
+
             <Button
                 Grid.Row="1"
                 Padding="20"
-                Command="{Binding NextCommand}"
-                Style="{DynamicResource PrimaryButton}"
-                Visibility="{Binding HasNext, Converter={StaticResource BooleanToVisibilityConverter}}">
+                Background="#a1a1a1"
+                Foreground="White"
+                Command="{Binding PreviousCommand}"
+                FontSize="{DynamicResource FontSize-Normal}"
+                Visibility="{Binding Menu.SelectedMeal.HasPreviousCategory, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <TextBlock>
                     <TextBlock.Inlines>
-                        <Run Text="{multilinguality:Translate 'Continue to ', 'Computrition'}" />
-                        <Run Text="{Binding NextCategory}" />
+                        <Run Text="{multilinguality:Translate 'Back to ', 'Computrition'}" />
+                        <Run Text="{Binding Menu.SelectedMeal.PreviousCategory.Name}" />
                     </TextBlock.Inlines>
                 </TextBlock>
             </Button>
             <Button
-                Grid.Row="1"
+                Grid.Row="2"
+                Padding="20"
+                Command="{Binding NextCommand}"
+                Style="{DynamicResource PrimaryButton}"
+                Visibility="{Binding Menu.SelectedMeal.HasNextCategory, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock>
+                    <TextBlock.Inlines>
+                        <Run Text="{multilinguality:Translate 'Continue to ', 'Computrition'}" />
+                        <Run Text="{Binding Menu.SelectedMeal.NextCategory.Name}" />
+                    </TextBlock.Inlines>
+                </TextBlock>
+            </Button>
+            <Button
+                Grid.Row="3"
                 Padding="20"
                 Background="{DynamicResource ColorInformation}"
                 Command="{Binding CompleteOrderCommand}"
                 Content="{multilinguality:Translate 'Submit order',
                                                     'Computrition'}"
                 Style="{DynamicResource PrimaryButton}"
-                Visibility="{Binding HasNext, Converter={StaticResource BooleanInvertedToVisibilityConverter}}" />
+                />
         </Grid>
     </Grid>
 </UserControl>

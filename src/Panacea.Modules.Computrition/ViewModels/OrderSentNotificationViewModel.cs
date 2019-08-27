@@ -19,7 +19,7 @@ namespace Panacea.Modules.Computrition.ViewModels
         public ICommand CloseCommand { get; set; }
         public OrderSentNotificationViewModel(string message)
         {
-            Message = new Translator("Computrition").Translate(message);
+            Message = message;
             CloseCommand = new RelayCommand(args => {
                 Close();
             });

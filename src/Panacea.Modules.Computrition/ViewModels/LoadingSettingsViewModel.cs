@@ -22,6 +22,7 @@ namespace Panacea.Modules.Computrition.ViewModels
         ComputritionPlugin _plugin;
         ComputritionSettings _settings;
         string _mrn;
+        private readonly string _nomealtext;
         Translator _translator = new Translator("Computrition");
 
         string _status;
@@ -88,14 +89,10 @@ namespace Panacea.Modules.Computrition.ViewModels
             try
             {
                 Status = _translator.Translate("Getting available meals...");
-                var patron = await computrition.GetPatronInfoAsync(
-                                                    _mrn,
-                                                    _settings.PatronInfoParams.ValidMeals,
-                                                    _settings.PatronInfoParams.NumberOfMeals,
-                                                    _settings.PatronInfoParams.NumberOfDays,
-                                                    _settings.PatronInfoParams.SkipCurrentMeal);
-                patron.Meals = patron.Meals.OrderBy(m => m.StartTime).ToList();
-                ConfirmationPageViewModel confirmation = new ConfirmationPageViewModel(_core, computrition, _settings, _mrn, true, patron);
+                var model = new MenuViewModel(_core, _mrn, computrition, _settings, _nomealtext);
+                await model.GetMealsAsync();
+
+                ConfirmationPageViewModel confirmation = new ConfirmationPageViewModel(_core, model, true);
                 if (_core.TryGetUiManager(out IUiManager _ui))
                 {
                     _ui.Navigate(confirmation, false);
@@ -123,10 +120,11 @@ namespace Panacea.Modules.Computrition.ViewModels
             _plugin = plugin;
         }
 
-        public LoadingSettingsViewModel(ComputritionPlugin plugin, PanaceaServices core, string mrn)
+        public LoadingSettingsViewModel(ComputritionPlugin plugin, PanaceaServices core, string mrn, string nomealtext)
             : this(plugin, core)
         {
             _mrn = mrn;
+            _nomealtext = nomealtext;
         }
     }
 }

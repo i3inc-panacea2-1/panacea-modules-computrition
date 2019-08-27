@@ -42,6 +42,9 @@ namespace Panacea.Modules.Computrition.Models
         [DataMember(Name = "checkInterval")]
         public int CheckInterval { get; set; }
 
+        [DataMember(Name = "timeout")]
+        public int Timeout { get; set; } = 30;
+
         [DataMember(Name = "reminders")]
         public List<int> Reminders { get; set; }
 
