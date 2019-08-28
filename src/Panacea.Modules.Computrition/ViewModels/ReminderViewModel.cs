@@ -64,6 +64,7 @@ namespace Panacea.Modules.Computrition.ViewModels
 
             _core = core;
             _menu = menu;
+            Meal = compMeal;
             if (menu != null && menu.SelectedMeal.AllowsNoMeal)
             {
                 NoMealVisibility = Visibility.Visible;

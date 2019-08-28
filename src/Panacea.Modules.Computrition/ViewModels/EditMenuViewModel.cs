@@ -45,6 +45,7 @@ namespace Panacea.Modules.Computrition.ViewModels
         public ICommand NextCommand { get; set; }
         public ICommand PreviousCommand { get; set; }
 
+        public ICommand ShowNutrientsCommand { get; set; }
 
         public EditMenuViewModel(
             PanaceaServices core,
@@ -65,7 +66,7 @@ namespace Panacea.Modules.Computrition.ViewModels
                     _core.Logger.Error(this, "ui manager not loaded");
                 }
             });
-            AddToTrayCommand = new RelayCommand((args) =>
+            AddToTrayCommand = new RelayCommand(async (args) =>
             {
                 var recipe = args as Recipe;
                 recipe.IsSelected = true;
@@ -85,13 +86,13 @@ namespace Panacea.Modules.Computrition.ViewModels
                     {
                         Quantities.Add(i);
                     }
-                    var quantitySelector = new QuantitySelectorPopupViewModel(_core, Quantities);
-                    _core.GetUiManager().ShowPopup(quantitySelector);
-                    quantitySelector.Add += (oo, ee) =>
+                    var quantitySelector = new QuantitySelectorPopupViewModel(_core, Quantities, menu.SelectedMeal.SelectedCategory);
+                    var q = await _core.GetUiManager().ShowPopup(quantitySelector);
+                    if (q > 0)
                     {
-                        category.Add(recipe, ee);
-                        //Completed = MaxSelections == SelectedRecipes.Where(r => category.Recipes.Contains(r)).Select(r => r.NumOfServings).Sum();
-                    };
+                        category.Add(recipe, q);
+                    }
+                    //Completed = MaxSelections == SelectedRecipes.Where(r => category.Recipes.Contains(r)).Select(r => r.NumOfServings).Sum();
                 }
                 (AddToTrayCommand as RelayCommand).RaiseCanExecuteChanged();
             },
@@ -188,6 +189,30 @@ namespace Panacea.Modules.Computrition.ViewModels
             {
                 return true;
             });
+            ShowNutrientsCommand = new RelayCommand(async (args) =>
+            {
+                if (_core.TryGetUiManager(out IUiManager ui))
+                {
+                    await ui.DoWhileBusy(async () =>
+                    {
+                        try
+                        {
+                            var nutrients = await menu.GetNutrientSummaryAsync(menu.SelectedMeal.SelectedRecipes.ToList());
+                            await ui.ShowPopup(new NutrientsListPopupViewModel(nutrients));
+                        }
+                        catch (Exception ex)
+                        {
+                            ui.Toast(new Translator("Computrition").Translate("An error occured. Please, try again later"));
+                            _core.Logger.Error(this, ex.Message);
+                        }
+                    });
+                }
+                else
+                {
+                    _core.Logger.Error(this, "ui manager not loaded");
+                }
+            },
+            args => menu.SelectedMeal.SelectedRecipes.Any());
         }
     }
 }

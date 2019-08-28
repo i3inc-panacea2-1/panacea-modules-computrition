@@ -136,7 +136,7 @@ namespace Panacea.Modules.Computrition.ViewModels
                     {
                         try
                         {
-                            var nutrients = await menu.GetNutrientSummaryAsync();
+                            var nutrients = await menu.GetNutrientSummaryAsync(menu.SelectedMeal.SelectedRecipes.ToList());
                             await ui.ShowPopup(new NutrientsListPopupViewModel(nutrients));
                         }
                         catch (Exception ex)
@@ -150,7 +150,8 @@ namespace Panacea.Modules.Computrition.ViewModels
                 {
                     _core.Logger.Error(this, "ui manager not loaded");
                 }
-            });
+            },
+            args=> menu.SelectedMeal.SelectedRecipes.Any());
         }
     }
 

@@ -14,14 +14,32 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock
             Margin="10"
+            Grid.Row="1"
+            FontWeight="DemiBold"
             Text="{multilinguality:Translate 'How many items would you like to add in your tray?',
                                              'Computrition'}"
             TextAlignment="Center" />
+        <TextBlock
+            
+            Grid.Row="0"
+            Margin="10"
+            FontSize="{DynamicResource FontSize-Normal}"
+            TextAlignment="Center"
+            TextWrapping="Wrap">
+            <TextBlock.Inlines>
+                <Run Text="{multilinguality:Translate 'You are allowed to select',
+                                             'Computrition'}"/>
+                <Run Text="{Binding Category.RemainingItems}" />
+                <Run Text="more items from" />
+                <Run Text="{Binding Category.Name}" />
+            </TextBlock.Inlines>
+        </TextBlock>
         <ItemsControl
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="10"
             ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=local:QuantitySelectorPopup}, Path=DataContext.Quantities}">
             <ItemsControl.ItemsPanel>

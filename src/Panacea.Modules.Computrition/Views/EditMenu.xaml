@@ -154,7 +154,7 @@
 
             <Button
                 Grid.Row="1"
-                Padding="20"
+                Padding="12"
                 Background="#a1a1a1"
                 Foreground="White"
                 Command="{Binding PreviousCommand}"
@@ -167,9 +167,10 @@
                     </TextBlock.Inlines>
                 </TextBlock>
             </Button>
+            
             <Button
                 Grid.Row="2"
-                Padding="20"
+                Padding="12"
                 Command="{Binding NextCommand}"
                 Style="{DynamicResource PrimaryButton}"
                 Visibility="{Binding Menu.SelectedMeal.HasNextCategory, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -180,15 +181,35 @@
                     </TextBlock.Inlines>
                 </TextBlock>
             </Button>
-            <Button
-                Grid.Row="3"
-                Padding="20"
-                Background="{DynamicResource ColorInformation}"
-                Command="{Binding CompleteOrderCommand}"
-                Content="{multilinguality:Translate 'Submit order',
-                                                    'Computrition'}"
-                Style="{DynamicResource PrimaryButton}"
-                />
+
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="0"
+                    Margin="3"
+                    Padding="10"
+                    Background="#e1e1e1"
+                    Foreground="#222"
+                    Command="{Binding ShowNutrientsCommand}"
+                    Content="{multilinguality:Translate 'Nutrients',
+                                                        'Computrition'}"
+                    Style="{DynamicResource PrimaryButton}"
+                    Visibility="{Binding HasChanges, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    FontSize="{DynamicResource FontSize-Normal}"/>
+                <Button
+                    Grid.Column="1"
+                    Margin="3"
+                    Padding="20"
+                    Background="{DynamicResource ColorInformation}"
+                    Command="{Binding CompleteOrderCommand}"
+                    Content="{multilinguality:Translate 'Submit order',
+                                                        'Computrition'}"
+                    Style="{DynamicResource PrimaryButton}"
+                    />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

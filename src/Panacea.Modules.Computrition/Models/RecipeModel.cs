@@ -251,9 +251,9 @@ namespace Panacea.Modules.Computrition.Models
             return SubmitMenuAsync(SelectedMeal.SelectedRecipes.ToList());
         }
 
-        public Task<List<Nutrient>> GetNutrientSummaryAsync()
+        public Task<List<Nutrient>> GetNutrientSummaryAsync(List<Recipe> recipes)
         {
-            return _service.GetNutrientSummaryAsync(SelectedMeal.SelectedRecipes.ToList(), _settings.PatronMenuParams.RoundingMethod, string.Join(",", _settings.PatronMenuParams.Nutrients));
+            return _service.GetNutrientSummaryAsync(recipes, _settings.PatronMenuParams.RoundingMethod, string.Join(",", _settings.PatronMenuParams.Nutrients));
         }
 
     }
