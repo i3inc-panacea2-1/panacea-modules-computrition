@@ -19,11 +19,11 @@ namespace Panacea.Modules.Computrition.ViewModels
     [View(typeof(Reminder))]
     public class ReminderViewModel : PopupViewModelBase<object>
     {
-        private ComputritionPlugin _plugin;
         private PanaceaServices _core;
+        private readonly MenuViewModel _menu;
 
         public ComputritionMeal Meal { get; set; }
-        public ComputritionSettings Settings { get; set; }
+
         public Visibility TextVisibility { get; set; }
         public Visibility ImageVisibility { get; set; }
         Visibility _nomealvisibility = Visibility.Collapsed;
@@ -37,6 +37,7 @@ namespace Panacea.Modules.Computrition.ViewModels
             set
             {
                 _nomealvisibility = value;
+                OnPropertyChanged();
             }
         }
         public Visibility CallFoodServicesButtonVisibility
@@ -48,6 +49,7 @@ namespace Panacea.Modules.Computrition.ViewModels
             set
             {
                 _callBtnVisibility = value;
+                OnPropertyChanged();
             }
         }
         public ICommand NoMealCommand { get; set; }
@@ -56,11 +58,12 @@ namespace Panacea.Modules.Computrition.ViewModels
         public ICommand CallFoodServicesCommand { get; set; }
         public bool CallButton { get; set; }
         public bool NoMealButton { get; set; }
-        public ReminderViewModel(PanaceaServices core, MenuViewModel menu, ComputritionMeal compMeal)
+        public MenuViewModel Menu { get => _menu; }
+        public ReminderViewModel(PanaceaServices core, MenuViewModel menu, ComputritionMeal compMeal, ComputritionPlugin plugin)
         {
 
-            this._core = core;
-
+            _core = core;
+            _menu = menu;
             if (menu != null && menu.SelectedMeal.AllowsNoMeal)
             {
                 NoMealVisibility = Visibility.Visible;
@@ -115,15 +118,12 @@ namespace Panacea.Modules.Computrition.ViewModels
             });
             OrderCommand = new RelayCommand(args =>
             {
-                _plugin.Call();
+                plugin.Call();
                 Close();
             });
             CallFoodServicesCommand = new RelayCommand(args =>
             {
-                if (_core.TryGetTelephone(out ITelephonePlugin _tel))
-                {
-                    _tel.Call(Settings.FoodServicesPhone);
-                }
+                menu.CallFoodServices();
                 Close();
             });
         }

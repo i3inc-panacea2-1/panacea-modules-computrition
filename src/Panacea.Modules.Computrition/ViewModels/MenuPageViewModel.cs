@@ -142,7 +142,7 @@ namespace Panacea.Modules.Computrition.ViewModels
                         catch (Exception ex)
                         {
                             ui.Toast(new Translator("Computrition").Translate("An error occured. Please, try again later"));
-
+                            _core.Logger.Error(this, ex.Message);
                         }
                     });
                 }

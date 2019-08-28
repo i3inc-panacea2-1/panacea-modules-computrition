@@ -58,7 +58,7 @@ namespace Panacea.Modules.Computrition.Models
         private readonly string _mrn;
         private readonly ComputritionSettings _settings;
         private readonly string _noMealText;
-
+        public ComputritionSettings Settings { get => _settings; }
         public event PropertyChangedEventHandler PropertyChanged;
         public DispatcherTimer Timer { get; private set; }
         public MenuViewModel(PanaceaServices core, string mrn, IComputritionService service, ComputritionSettings settings, string noMealText)
@@ -112,7 +112,7 @@ namespace Panacea.Modules.Computrition.Models
                     ui.BeforeNavigate -= Host_BeforeNavigate;
                     try
                     {
-                        await ui.DoWhileBusy(async() =>
+                        await ui.DoWhileBusy(async () =>
                         {
                             await _service.UnlockPatronMenuAsync(SelectedMeal.Id, SelectedMeal.Date, _mrn);
                         });
@@ -286,7 +286,7 @@ namespace Panacea.Modules.Computrition.Models
             SelectedRecipes = new ObservableCollection<Recipe>(Categories.SelectMany(c => c.Recipes.Where(r => r.NumOfServings > 0)));
             NoMealCategory = Categories.FirstOrDefault(c => c.Name == noMealText);
             AllowsNoMeal = NoMealCategory != null;
-            
+
             if (Categories.Any())
             {
                 SelectedCategory = Categories[0];

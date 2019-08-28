@@ -136,13 +136,13 @@ namespace Panacea.Modules.Computrition
                 
                 var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
                 await vm.SetSelectedMealAsync(meal);
-                reminder = new ReminderViewModel( _core, vm,  mealToRemind);
+                reminder = new ReminderViewModel( _core, vm,  mealToRemind, this);
             }
             catch (Exception ex)
             {
                 var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
                 await vm.SetSelectedMealAsync(meal);
-                reminder = new ReminderViewModel(_core, vm, mealToRemind);
+                reminder = new ReminderViewModel(_core, vm, mealToRemind, this);
                 _core.Logger.Error(this, "Could not get menu information! " + ex.Message);
             }
             if (_core.TryGetUiManager(out IUiManager ui))

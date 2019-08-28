@@ -42,26 +42,26 @@
                 FontSize="{DynamicResource FontSize-Large}"
                 Background="{DynamicResource ColorInformation}"
                 Command="{Binding OrderCommand}"
-                Content="{Binding Path=Settings.OrderButtonText}"
+                Content="{Binding Path=Menu.Settings.OrderButtonText}"
                 Style="{DynamicResource PrimaryButton}" />
             <Button
                 Background="{DynamicResource ColorSuccess}"
                 FontSize="{DynamicResource FontSize-Large}"
                 Command="{Binding CloseCommand}"
-                Content="{Binding Path=Settings.CloseButtonText}"
+                Content="{Binding Path=Menu.Settings.CloseButtonText}"
                 Style="{DynamicResource PrimaryButton}" />
             <Button
                  Background="{DynamicResource ColorError}"
                 FontSize="{DynamicResource FontSize-Large}"
                 Command="{Binding CallFoodServicesCommand}"
-                Content="{Binding Path=Settings.CallFoodServicesButtonText}"
+                Content="{Binding Path=Menu.Settings.CallFoodServicesButtonText}"
                 Style="{DynamicResource PrimaryButton}"
                 Visibility="{Binding Path=CallFoodServicesButtonVisibility}" />
             <Button
                 FontSize="{DynamicResource FontSize-Large}"
                 Background="#a1a1a1"
                 Command="{Binding NoMealCommand}"
-                Content="{Binding Path=Settings.NoMealButtonText}"
+                Content="{Binding Path=Menu.Settings.NoMealButtonText}"
                 Style="{DynamicResource PrimaryButton}"
                 Visibility="{Binding Path=NoMealVisibility}" />
         </UniformGrid>
