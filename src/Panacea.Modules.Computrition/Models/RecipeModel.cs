@@ -101,6 +101,10 @@ namespace Panacea.Modules.Computrition.Models
             }
         }
 
+        public Task UnlockAsync()
+        {
+            return _service.UnlockPatronMenuAsync(SelectedMeal.Id, SelectedMeal.Date, _mrn);
+        }
 
         private async void Host_BeforeNavigate(object sender, BeforeNavigateEventArgs e)
         {
@@ -114,7 +118,7 @@ namespace Panacea.Modules.Computrition.Models
                     {
                         await ui.DoWhileBusy(async () =>
                         {
-                            await _service.UnlockPatronMenuAsync(SelectedMeal.Id, SelectedMeal.Date, _mrn);
+                            await UnlockAsync();
                         });
                     }
                     catch (Exception ex)

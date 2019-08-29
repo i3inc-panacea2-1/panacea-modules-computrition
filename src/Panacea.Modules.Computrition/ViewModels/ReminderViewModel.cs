@@ -99,7 +99,7 @@ namespace Panacea.Modules.Computrition.ViewModels
             {
                 try
                 {
-                    await menu.SetSelectedMealAsync(meal);
+                   
                     await menu.NoMealAsync();
                     Close();
                 }

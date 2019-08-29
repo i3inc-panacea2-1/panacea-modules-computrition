@@ -112,9 +112,9 @@ namespace Panacea.Modules.Computrition
                 return;
             }
 
-            if(_core.TryGetUiManager(out IUiManager ui))
+            if (_core.TryGetUiManager(out IUiManager ui))
             {
-                if(ui.CurrentPage.GetType().Assembly == this.GetType().Assembly)
+                if (ui.CurrentPage.GetType().Assembly == this.GetType().Assembly)
                 {
                     return;
                 }
@@ -138,25 +138,32 @@ namespace Panacea.Modules.Computrition
             {
                 return;
             }
-            
-            var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
-
-            var reminder = new ReminderViewModel(_core, vm, mealToRemind, this, meal);
-
-            if (_core.TryGetUiManager(out IUiManager ui2))
+            try
             {
-                if (mealToRemind.MessageType == "notification")
+                var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
+                await vm.SetSelectedMealAsync(meal);
+                await vm.UnlockAsync();
+                var reminder = new ReminderViewModel(_core, vm, mealToRemind, this, meal);
+
+                if (_core.TryGetUiManager(out IUiManager ui2))
                 {
-                    ui2.Notify(reminder);
+                    if (mealToRemind.MessageType == "notification")
+                    {
+                        ui2.Notify(reminder);
+                    }
+                    else
+                    {
+                        await ui2.ShowPopup<object>(reminder);
+                    }
                 }
                 else
                 {
-                    await ui2.ShowPopup<object>(reminder);
+                    _core.Logger.Error(this, "ui manager not loaded");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                _core.Logger.Error(this, "ui manager not loaded");
+                _core.Logger.Error(this, ex.Message);
             }
         }
 
