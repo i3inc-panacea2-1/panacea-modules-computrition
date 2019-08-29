@@ -53,7 +53,7 @@
             <Button
                  Background="{DynamicResource ColorError}"
                 FontSize="{DynamicResource FontSize-Large}"
-                Command="{Binding CallFoodServicesCommand}"
+                pcontrols:Material.AsyncCommand="{Binding CallFoodServicesCommand}"
                 Content="{Binding Path=Menu.Settings.CallFoodServicesButtonText}"
                 Style="{DynamicResource PrimaryButton}"
                 Visibility="{Binding Path=CallFoodServicesButtonVisibility}" />
