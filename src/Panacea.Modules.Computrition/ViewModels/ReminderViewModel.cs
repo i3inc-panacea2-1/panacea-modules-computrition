@@ -19,6 +19,7 @@ namespace Panacea.Modules.Computrition.ViewModels
     [View(typeof(Reminder))]
     public class ReminderViewModel : PopupViewModelBase<object>
     {
+        private readonly Meal _meal;
         private PanaceaServices _core;
         private readonly MenuViewModel _menu;
 
@@ -52,16 +53,16 @@ namespace Panacea.Modules.Computrition.ViewModels
                 OnPropertyChanged();
             }
         }
-        public ICommand NoMealCommand { get; set; }
+        public AsyncCommand NoMealCommand { get; set; }
         public ICommand CloseCommand { get; set; }
         public ICommand OrderCommand { get; set; }
         public ICommand CallFoodServicesCommand { get; set; }
         public bool CallButton { get; set; }
         public bool NoMealButton { get; set; }
         public MenuViewModel Menu { get => _menu; }
-        public ReminderViewModel(PanaceaServices core, MenuViewModel menu, ComputritionMeal compMeal, ComputritionPlugin plugin)
+        public ReminderViewModel(PanaceaServices core, MenuViewModel menu, ComputritionMeal compMeal, ComputritionPlugin plugin, Meal meal)
         {
-
+            _meal = meal;
             _core = core;
             _menu = menu;
             Meal = compMeal;
@@ -94,10 +95,11 @@ namespace Panacea.Modules.Computrition.ViewModels
                 ImageVisibility = Visibility.Visible;
                 TextVisibility = Visibility.Collapsed;
             }
-            NoMealCommand = new RelayCommand(async (args) =>
+            NoMealCommand = new AsyncCommand(async (args) =>
             {
                 try
                 {
+                    await menu.SetSelectedMealAsync(meal);
                     await menu.NoMealAsync();
                     Close();
                 }

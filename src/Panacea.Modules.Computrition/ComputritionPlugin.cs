@@ -24,8 +24,8 @@ namespace Panacea.Modules.Computrition
 {
     public class ComputritionPlugin : ICallablePlugin
     {
-       
-        
+
+
         //To be set by cmd arguments
         protected string computritionmrn;
         DispatcherTimer refreshTimer;
@@ -50,7 +50,7 @@ namespace Panacea.Modules.Computrition
         public ComputritionPlugin(PanaceaServices core)
         {
             _core = core;
-            
+
             //computritionmrn = "H001501022";
         }
 
@@ -111,6 +111,14 @@ namespace Panacea.Modules.Computrition
             {
                 return;
             }
+
+            if(_core.TryGetUiManager(out IUiManager ui))
+            {
+                if(ui.CurrentPage.GetType().Assembly == this.GetType().Assembly)
+                {
+                    return;
+                }
+            }
             var mealDetails = GetNextMealReminder(_settings, _patron);
             var mealToRemind = mealDetails?.CompMeal;
             var meal = mealDetails?.Meal;
@@ -130,30 +138,20 @@ namespace Panacea.Modules.Computrition
             {
                 return;
             }
-            ReminderViewModel reminder;
-            try
-            {
-                
-                var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
-                await vm.SetSelectedMealAsync(meal);
-                reminder = new ReminderViewModel( _core, vm,  mealToRemind, this);
-            }
-            catch (Exception ex)
-            {
-                var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
-                await vm.SetSelectedMealAsync(meal);
-                reminder = new ReminderViewModel(_core, vm, mealToRemind, this);
-                _core.Logger.Error(this, "Could not get menu information! " + ex.Message);
-            }
-            if (_core.TryGetUiManager(out IUiManager ui))
+            
+            var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
+
+            var reminder = new ReminderViewModel(_core, vm, mealToRemind, this, meal);
+
+            if (_core.TryGetUiManager(out IUiManager ui2))
             {
                 if (mealToRemind.MessageType == "notification")
                 {
-                    ui.Notify(reminder);
+                    ui2.Notify(reminder);
                 }
                 else
                 {
-                    await ui.ShowPopup<object>(reminder);
+                    await ui2.ShowPopup<object>(reminder);
                 }
             }
             else
@@ -181,7 +179,7 @@ namespace Panacea.Modules.Computrition
                 else _mrn = ComputritionMrn;
 
                 computrition = new ComputritionService(new HttpConnector(15000), _settings.ServerAddress);
-               
+
                 _patron = await GetPatronInfo();
             }
             catch (Exception ex)
@@ -227,7 +225,7 @@ namespace Panacea.Modules.Computrition
             }
         }
 
-        
+
 
         public async Task<PatronInfo> GetPatronInfo()
         {
