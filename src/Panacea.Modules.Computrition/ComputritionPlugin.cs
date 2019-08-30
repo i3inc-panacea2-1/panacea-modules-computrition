@@ -105,6 +105,7 @@ namespace Panacea.Modules.Computrition
             reminderTimer.Start();
         }
 
+        ViewModelBase _previousReminder;
         private async void CheckForReminder(object sender, EventArgs e)
         {
             if (_settings == null || _patron == null)
@@ -143,10 +144,17 @@ namespace Panacea.Modules.Computrition
                 var vm = new MenuViewModel(_core, _mrn, computrition, _settings, MealNotRequiredCategoryName);
                 await vm.SetSelectedMealAsync(meal);
                 await vm.UnlockAsync();
+
                 var reminder = new ReminderViewModel(_core, vm, mealToRemind, this, meal);
 
                 if (_core.TryGetUiManager(out IUiManager ui2))
                 {
+                    if (_previousReminder != null)
+                    {
+                        ui2.Refrain(_previousReminder);
+                        ui2.HidePopup(_previousReminder);
+                    }
+                    _previousReminder = reminder;
                     if (mealToRemind.MessageType == "notification")
                     {
                         ui2.Notify(reminder);
