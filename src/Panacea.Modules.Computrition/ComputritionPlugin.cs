@@ -265,7 +265,7 @@ namespace Panacea.Modules.Computrition
         {
             var now = DateTime.Now;
             var nextCheck = now.AddMinutes(5);
-            if (settings?.Reminders.Count > 0)
+            if (settings?.Reminders?.Count > 0)
             {
                 foreach (ComputritionMeal compMeal in settings.Meals)
                 {
